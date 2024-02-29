@@ -10,6 +10,9 @@
 name: Build and publish Docker image
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - main
