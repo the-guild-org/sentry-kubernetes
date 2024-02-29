@@ -57,23 +57,12 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
       - name: Build and push Docker images
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           platforms: "${{ matrix.arch }}"
           push: ${{ github.ref == 'refs/heads/master' }}
-          cache-from: |
-            type=local,src=/tmp/.buildx-cache
-            type=local,src=${{ steps.composer-cache.outputs.dir }}
-          cache-to: |
-            type=local,dest=/tmp/.buildx-cache
-            type=local,dest=${{ steps.composer-cache.outputs.dir }}
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
